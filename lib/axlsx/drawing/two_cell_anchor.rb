@@ -43,6 +43,10 @@ module Axlsx
     # @note The recommended way to set the start position for graphical
     # objects is directly thru the object. 
     # @see Chart#start_at
+    def start_at=(x, y=nil)
+      start_at(x,y)
+    end
+
     def start_at(x, y=nil)
       from.coord x, y
     end
