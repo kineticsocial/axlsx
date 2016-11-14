@@ -52,7 +52,12 @@ module Axlsx
     def serialized_attributes(str = '', additional_attributes = {})
       attributes = declared_attributes.merge! additional_attributes
       attributes.each do |key, value|
-        str << "#{Axlsx.camel(key, false)}=\"#{Axlsx.camel(Axlsx.booleanize(value), false)}\" "
+        tag_value = if additional_attributes[:rawValue]
+          value
+        else
+          Axlsx.camel(Axlsx.booleanize(value), false)
+        end
+        str << "#{Axlsx.camel(key, false)}=\"#{tag_value}\" "
       end
       str
     end
