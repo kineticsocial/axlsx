@@ -107,6 +107,8 @@ module Axlsx
     # @return [Integer]
     attr_reader :sz
 
+    attr_reader :scheme
+
      # @see name
     def name=(v) Axlsx::validate_string v; @name = v end
     # @see charset
@@ -133,6 +135,8 @@ module Axlsx
     def color=(v) DataTypeValidator.validate "Font.color", Color, v; @color=v end
     # @see sz
     def sz=(v) Axlsx::validate_unsigned_int v; @sz=v end
+
+    def scheme=(v) Axlsx::validate_string v; @scheme=v end
 
     # Serializes the object
     # @param [String] str

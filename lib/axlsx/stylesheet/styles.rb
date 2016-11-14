@@ -279,7 +279,8 @@ module Axlsx
     # @return [Font|Integer]
     def parse_font_options(options={})
       return if (options.keys & [:fg_color, :sz, :b, :i, :u, :strike, :outline, :shadow, :charset, :family, :font_name]).empty?
-      fonts.first.instance_values.each do |key, value|
+      # By default should copy only the basic things from the main font, rather than everything
+      fonts.first.instance_values.select {|key, _| [:font_name, :sz].include? key }.each do |key, value|
         # Thanks for that 1.8.7 - cant do a simple merge...
         options[key.to_sym] = value unless options.keys.include?(key.to_sym)
       end
@@ -310,8 +311,8 @@ module Axlsx
     # may include an :edges entry that references an array of symbols identifying which border edges 
     # you wish to apply the style or any other valid Border initializer options.
     # If the :edges entity is not provided the style is applied to all edges of cells that reference this style.
-	# Also available :border_top, :border_right, :border_bottom and :border_left options with :style and/or :color 
-	# key-value entries, which override :border values.
+    # Also available :border_top, :border_right, :border_bottom and :border_left options with :style and/or :color 
+    # key-value entries, which override :border values.
     # @example
     #   #apply a thick red border to the top and bottom
     #   { :border => { :style => :thick, :color => "FFFF0000", :edges => [:top, :bottom] }
