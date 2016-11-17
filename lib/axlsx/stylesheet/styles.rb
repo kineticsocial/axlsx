@@ -265,6 +265,7 @@ module Axlsx
     # parses add_style options for fonts. If the options hash contains :type => :dxf we return a new Font object.
     # if not, we return the index of the newly created font object in the styles.fonts collection.
     # @note noop if none of the options described here are set on the options parameter.
+    # @option options [Integer] font The font ID if the font has already been added before
     # @option options [Symbol] type The type of style object we are working with (dxf or xf)
     # @option options [String] fg_color The text color
     # @option options [Integer] sz The text size
@@ -278,6 +279,7 @@ module Axlsx
     # @option options [String] font_name The name of the font to use
     # @return [Font|Integer]
     def parse_font_options(options={})
+      return options[:font_id] if options[:font_id]
       return if (options.keys & [:fg_color, :sz, :b, :i, :u, :strike, :outline, :shadow, :charset, :family, :font_name]).empty?
       # By default should copy only the basic things from the main font, rather than everything
       fonts.first.instance_values.select {|key, _| [:font_name, :sz].include? key }.each do |key, value|
