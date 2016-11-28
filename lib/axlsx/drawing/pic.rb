@@ -43,6 +43,11 @@ module Axlsx
     # @return [String]
     attr_reader :image_src
 
+    # The path to the image you want to include
+    # Only local images are supported at this time.
+    # @return [CarrierWave::Storage::Fog::File]
+    attr_reader :image_carrierwave_file
+
     # The anchor for this image
     # @return [OneCellAnchor]
     attr_reader :anchor
@@ -78,6 +83,12 @@ module Axlsx
       @image_src = v
     end
 
+    def image_carrierwave_file=(v)
+      RestrictionValidator.validate 'Pic.image_carrierwave_file', ALLOWED_MIME_TYPES, v.content_type
+      raise ArgumentError, "File does not exist" unless v.exists?
+      @image_carrierwave_file = v
+    end
+
     # @see name
     def name=(v) Axlsx::validate_string(v); @name = v; end
 
@@ -93,7 +104,8 @@ module Axlsx
     # returns the extension of image_src without the preceeding '.'
     # @return [String]
     def extname
-      File.extname(image_src).delete('.') unless image_src.nil?
+      return File.extname(image_src).delete('.') unless image_src.nil?
+      return image_carrierwave_file.extension unless image_carrierwave_file.nil?
     end
 
     # The index of this image in the workbooks images collections

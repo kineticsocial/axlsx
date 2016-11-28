@@ -180,6 +180,10 @@ module Axlsx
           # binread for 1.9.3
           zip.write IO.respond_to?(:binread) ? IO.binread(part[:path]) : IO.read(part[:path])
         end
+        unless part[:carrierwave_file].nil?
+          zip.put_next_entry(zip_entry_for_part(part))
+          zip.write part[:carrierwave_file].read
+        end
       end
       zip
     end
@@ -242,7 +246,11 @@ module Axlsx
       end
 
       workbook.images.each do |image|
-        parts << {:entry => "xl/#{image.pn}", :path => image.image_src}
+        if image.image_src
+          parts << {:entry => "xl/#{image.pn}", :path => image.image_src}
+        elsif
+          parts << {:entry => "xl/#{image.pn}", :carrierwave_file => image.image_carrierwave_file}
+        end
       end
 
       if use_shared_strings
