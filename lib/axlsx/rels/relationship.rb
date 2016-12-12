@@ -1,15 +1,14 @@
 # encoding: UTF-8
+require 'axlsx/threadsafe_attributes/threadsafe_attributes.rb'
+
 module Axlsx
   # A relationship defines a reference between package parts.
   # @note Packages automatically manage relationships.
   class Relationship
     
     class << self
-      # Keeps track of all instances of this class.
-      # @return [Array]
-      def instances
-        @instances ||= []
-      end
+      include ThreadsafeAttributes
+      threadsafe_attribute :instances, default: []
       
       # Clear cached instances.
       # 
@@ -21,7 +20,7 @@ module Axlsx
       # Also, calling this avoids memory leaks (cached instances lingering around 
       # forever). 
       def clear_cached_instances
-        @instances = []
+        self.instances = []
       end
       
       # Generate and return a unique id (eg. `rId123`) Used for setting {#Id}. 
@@ -30,7 +29,7 @@ module Axlsx
       # {clear_cached_instances} will automatically reset the generated ids, too.
       # @return [String]
       def next_free_id
-        "rId#{@instances.size + 1}"
+        "rId#{self.instances.size + 1}"
       end
     end
 
